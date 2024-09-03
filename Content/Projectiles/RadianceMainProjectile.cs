@@ -87,6 +87,7 @@ namespace Arathia.Content.Projectiles
 
         private int summonCooldown;
         private int totalSummonedProjectiles = 0;
+        private int maxSummonedProjectiles = 3;
         private int npcHits = 0;
 
         // Custom AI
@@ -102,7 +103,7 @@ namespace Arathia.Content.Projectiles
             float maxDetectRadius = 400f; // The maximum radius at which a projectile can detect a target
             Projectile.rotation = Projectile.velocity.ToRotation();
 
-            if (totalSummonedProjectiles > 2)
+            if (totalSummonedProjectiles >= maxSummonedProjectiles || npcHits > 5)
             {
                 Projectile.timeLeft = 0;
             }
@@ -177,8 +178,7 @@ namespace Arathia.Content.Projectiles
             npcHits++;
             if (npcHits % 2 == 0)
             {
-                Projectile.Opacity *= 0.666f;
-                totalSummonedProjectiles++;
+                maxSummonedProjectiles--;
             }
             base.OnHitNPC(target, hit, damageDone);
         }
@@ -228,36 +228,42 @@ namespace Arathia.Content.Projectiles
 
         public override void OnKill(int timeLeft)
         {
-            // Spawn visual effects (dust, sound, etc.)
-            DustHelper.SpawnCircleDust(Projectile.Center, ModContent.DustType<SolarDust>(), 200, 10, 7.5f, 1.5f);
-            SoundEngine.PlaySound(SoundID.Item74, Projectile.position);
-
-            float explosionRadius = 100f;
-            // Damage all nearby NPCs within the explosion radius
-            for (int i = 0; i < Main.maxNPCs; i++)
+            if (totalSummonedProjectiles > 0)
             {
-                NPC npc = Main.npc[i];
-                if (IsValidTarget(npc))
+                // Spawn visual effects (dust, sound, etc.)
+                DustHelper.SpawnCircleDust(Projectile.Center, ModContent.DustType<SolarDust>(), 200, 10, 7.5f, 1.5f);
+                SoundEngine.PlaySound(SoundID.Item74, Projectile.position);
+
+                float explosionRadius = 100f;
+                // Damage all nearby NPCs within the explosion radius
+                for (int i = 0; i < Main.maxNPCs; i++)
                 {
-                    // Calculate the distance from the projectile to the NPC
-                    float distance = Vector2.Distance(Projectile.Center, npc.Center);
-
-                    // If the NPC is within the explosion radius, apply damage
-                    if (distance <= explosionRadius)
+                    NPC npc = Main.npc[i];
+                    if (IsValidTarget(npc))
                     {
-                        // Create a HitInfo object to specify the damage details
-                        NPC.HitInfo hitInfo = new()
-                        {
-                            Damage = Projectile.damage,
-                            Knockback = 5f,
-                            HitDirection = (Projectile.Center.X < npc.Center.X) ? 1 : -1,
-                            Crit = Projectile.CritChance > 0
-                        };
+                        // Calculate the distance from the projectile to the NPC
+                        float distance = Vector2.Distance(Projectile.Center, npc.Center);
 
-                        // Apply the damage to the NPC
-                        npc.StrikeNPC(hitInfo);
+                        // If the NPC is within the explosion radius, apply damage
+                        if (distance <= explosionRadius)
+                        {
+                            // Create a HitInfo object to specify the damage details
+                            NPC.HitInfo hitInfo = new()
+                            {
+                                Damage = Projectile.damage,
+                                Knockback = 5f,
+                                HitDirection = (Projectile.Center.X < npc.Center.X) ? 1 : -1,
+                            };
+
+                            // Apply the damage to the NPC
+                            npc.StrikeNPC(hitInfo);
+                        }
                     }
                 }
+            }
+            else
+            {
+                DustHelper.SpawnCircleDust(Projectile.Center, ModContent.DustType<SolarDust>(), 50, 5, 2f, 0.5f);
             }
         }
     }
