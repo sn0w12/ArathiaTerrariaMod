@@ -1,0 +1,86 @@
+# This file will automatically update with entries for new content after a build and reload
+
+Items: {
+	SunSword: {
+		DisplayName: Radiance
+		Tooltip: An odachi symbolizing the sun.
+	}
+
+	StelarusEmbrace: {
+		Tooltip:
+			'''
+			'Feel the fleeting embrace of Stelarus, even as his light slowly fades'
+			Increases melee damage by {0}%
+			Increases melee attack speed by {1}%
+			Increases melee critical strike chance by {2}%
+			Increases maximum health by {4}
+			{3} Defense
+			Melee attacks inflict Holy Flame
+			'''
+		DisplayName: Stelarus' Embrace
+	}
+
+	WorldStone: {
+		Tooltip:
+			'''
+			Increases all damage by {0}%
+			{1} Defense
+			Increases your max number of minions by {2}
+			Increases the maximum number of sentries by {3}
+			Increases maximum mana by {4}
+			20% chance to not consume arrows
+			{6}% increased movement speed
+			'''
+		DisplayName: World Stone
+	}
+
+	DevilsHeart: {
+		Tooltip: ""
+		DisplayName: Devil's Heart
+	}
+
+	SolarStone: {
+		DisplayName: Solar Stone
+		Tooltip:
+			'''
+			Increases melee damage by {0}%
+			{1} Defense
+			{2}% increased movement speed
+			'''
+	}
+
+	TsukiPickaxe: {
+		DisplayName: Tsuki Pickaxe
+		Tooltip: ""
+	}
+
+	TsukiBar: {
+		DisplayName: Tsukikage Bar
+		Tooltip: ""
+	}
+
+	TsukiOre: {
+		DisplayName: Tsukikage Ore
+		Tooltip: ""
+	}
+}
+
+Projectiles: {
+	RadianceProjectile.DisplayName: Radiance Projectile
+	RadianceMainProjectile.DisplayName: Radiance Main Projectile
+}
+
+Buffs: {
+	HolyFlameDebuff: {
+		Description: Mods.Arathia.Buffs.HolyFlameDebuff.Description
+		DisplayName: Holy Flame Debuff
+	}
+
+	FrigidBlazeDebuff: {
+		DisplayName: Frigid Blaze Debuff
+		Description: Mods.Arathia.Buffs.FrigidBlazeDebuff.Description
+	}
+}
+
+WorldGen.TsukiOrePassMessage: Generating Tsukikage Ore
+Tiles.TsukiOreTile.MapEntry: Tsukikage Ore Tile

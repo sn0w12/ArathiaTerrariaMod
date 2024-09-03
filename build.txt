@@ -1,0 +1,3 @@
+displayName = Arathia
+author = Sn0w
+version = 0.1
