@@ -5,6 +5,7 @@ using Terraria.Localization;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System;
+using Arathia.Utilities;
 
 namespace Arathia.Content.Items.Accessories
 {
@@ -119,14 +120,9 @@ namespace Arathia.Content.Items.Accessories
             }
 
             float movementSpeedBonus = SolarStone.MovementSpeedBonus;
-            int numberOfDigits = movementSpeedBonus.ToString().Length;
-            // Calculate the factor to convert movementSpeedBonus to a decimal < 1
-            float factor = (float)Math.Pow(10, numberOfDigits);
-            // Convert to 1.x format
-            float convertedValue = 1 + (movementSpeedBonus / factor);
 
             // The following modifications are similar to Shadow Armor set bonus
-            Player.accRunSpeed *= convertedValue;
+            Player.accRunSpeed *= StatHelper.ConvertToOneXFormat(movementSpeedBonus);
         }
     }
 }
