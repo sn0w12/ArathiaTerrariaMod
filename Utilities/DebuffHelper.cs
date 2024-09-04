@@ -25,6 +25,20 @@ namespace Arathia.Utilities
         {
             float totalAdditiveDamage = 0f;
 
+            // If no damage classes are provided, get all additive damage
+            if (damageClasses.Length == 0)
+            {
+                damageClasses =
+                    [
+                        DamageClass.Generic,
+                        DamageClass.Melee,
+                        DamageClass.Ranged,
+                        DamageClass.Magic,
+                        DamageClass.Summon,
+                        DamageClass.Throwing,
+                    ];
+            }
+
             foreach (var damageClass in damageClasses)
             {
                 totalAdditiveDamage += player.GetDamage(damageClass).Additive;
