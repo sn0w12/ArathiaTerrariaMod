@@ -65,8 +65,15 @@ Items: {
 	}
 
 	EridusEmbrace: {
-		DisplayName: Eridus Embrace
-		Tooltip: ""
+		Tooltip:
+			'''
+			'Feel the embrace of Eridus'
+			Increases magic damage by {0}%
+			-{2}% mana usage
+			Enemies are less likely to target you
+			Attacks inflict Void Taint
+			'''
+		DisplayName: Eridus' Embrace
 	}
 }
 
