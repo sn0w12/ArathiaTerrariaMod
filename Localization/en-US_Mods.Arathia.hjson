@@ -80,12 +80,21 @@ Items: {
 		DisplayName: Reiko’s Full Moon
 		Tooltip: ""
 	}
+
+	SunMoonBook: {
+		DisplayName: Sun Moon Book
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
 	RadianceProjectile.DisplayName: Radiance Projectile
 	RadianceMainProjectile.DisplayName: Radiance Main Projectile
 	MoonProjectile.DisplayName: Moon Projectile
+	SunMoonProjectile.DisplayName: Sun Moon Projectile
+	SubMoonProjectile.DisplayName: Sub Moon Projectile
+	SunMoonSubProjectile.DisplayName: Sun Moon Sub Projectile
+	SubSunProjectile.DisplayName: Sub Sun Projectile
 }
 
 Buffs: {

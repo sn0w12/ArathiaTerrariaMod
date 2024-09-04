@@ -180,7 +180,10 @@ namespace Arathia.Utilities
         public static void CreateExplosion(Projectile projectile, int dustId, SoundStyle sound, DamageClass damageType, float explosionRadius = 100f, float speed = 7.5f, float dustScaleMultiplier = 1.5f)
         {
             // Spawn visual effects (dust, sound, etc.)
-            DustHelper.SpawnCircleDust(projectile.Center, dustId, (int)explosionRadius * 2, (int)explosionRadius / 10, speed, dustScaleMultiplier);
+            if (dustId != 0)
+            {
+                DustHelper.SpawnCircleDust(projectile.Center, dustId, (int)explosionRadius * 2, (int)explosionRadius / 10, speed, dustScaleMultiplier);
+            }
             SoundEngine.PlaySound(sound, projectile.position);
 
             // Damage all nearby NPCs within the explosion radius

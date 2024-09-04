@@ -1,3 +1,4 @@
+using System;
 using Arathia.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -29,30 +30,51 @@ namespace Arathia.Utilities
             return new Vector3(normalizedR * lightIntensity, normalizedG * lightIntensity, normalizedB * lightIntensity);
         }
 
-        private static void SpawnDustInternal(Vector2 position, int type, int limit, float radiusX, float radiusY, float speed = 2.5f, float scaleMultiplier = 1f, bool noGravity = true)
+        private static void SpawnDustInternal(Vector2 position, int type, int limit, float radiusX, float radiusY, float speed = 2.5f, float scaleMultiplier = 1f, bool noGravity = true, float angle = 0f, float coneWidth = 360f)
         {
+            // Convert the cone width from degrees to radians
+            float halfConeWidthRadians = MathHelper.ToRadians(coneWidth / 2f);
+
             for (int i = 0; i < limit; i++)
             {
-                // Generate a random position around the projectile center
+                // Generate a random position around the center
                 Vector2 randomOffset = Main.rand.NextVector2Circular(radiusX, radiusY);
                 Vector2 dustPosition = position + randomOffset;
 
                 // Create a new dust at the random position
                 Dust dust = Dust.NewDustPerfect(dustPosition, type);
 
-                // Generate a random direction for the dust to shoot out
-                Vector2 randomDirection = Main.rand.NextVector2Unit();
+                // Generate a random angle within the specified cone
+                float randomAngle = angle + Main.rand.NextFloat(-halfConeWidthRadians, halfConeWidthRadians);
 
-                // Set the dust velocity to the random direction multiplied by the desired speed
+                // Create a direction vector based on the random angle
+                Vector2 direction = new Vector2((float)Math.Cos(randomAngle), (float)Math.Sin(randomAngle));
+
+                // Set the dust velocity in the specified cone direction, with a random speed
                 if (speed > 0)
                 {
-                    dust.velocity = randomDirection * Main.rand.NextFloat(speed * 0.75f, speed * 1.25f);
+                    float finalSpeed = Main.rand.NextFloat(speed * 0.75f, speed * 1.25f);
+                    if (coneWidth < 360f)
+                    {
+                        Vector2 originalDirection = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+                        // Calculate the angle between the mouse direction and the dust direction
+                        float angleInRadians = (float)Math.Acos(Vector2.Dot(originalDirection, direction));
+
+                        // Calculate speed based on the angle, with a sharper decrease as the angle increases
+                        float speedMultiplier = MathHelper.Lerp(1f, 0.75f, angleInRadians);
+                        //Main.NewText($"Speed Multiplier: {speedMultiplier}, Angle Degrees: {angleInDegrees}");
+                        finalSpeed *= speedMultiplier;
+                    }
+                    dust.velocity = direction * finalSpeed;
                 }
+
+                // Set the scale and other dust properties
                 dust.scale *= Main.rand.NextFloat(scaleMultiplier * 0.9f, scaleMultiplier * 1.1f);
                 dust.noGravity = noGravity;
                 dust.fadeIn = 0.75f;
             }
         }
+
 
         /// <summary>
         /// Spawns a specified number of dust particles in a circular pattern around a given position.
@@ -66,7 +88,6 @@ namespace Arathia.Utilities
         /// <param name="noGravity">Whether the dust particles are affected by gravity. Defaults to true.</param>
         public static void SpawnCircleDust(Vector2 position, int type, int limit, float radius = 20f, float speed = 2.5f, float scaleMultiplier = 1f, bool noGravity = true)
         {
-            // Call the generalized method with the same radius for both axes
             SpawnDustInternal(position, type, limit, radius, radius, speed, scaleMultiplier, noGravity);
         }
 
@@ -83,8 +104,15 @@ namespace Arathia.Utilities
         /// <param name="noGravity">Whether the dust particles are affected by gravity. Defaults to true.</param>
         public static void SpawnEllipseDust(Vector2 position, int type, int limit, float width = 20f, float height = 20f, float speed = 2.5f, float scaleMultiplier = 1f, bool noGravity = true)
         {
-            // Call the generalized method with different radii for the x and y axes
             SpawnDustInternal(position, type, limit, width / 2f, height / 2f, speed, scaleMultiplier, noGravity);
+        }
+
+        /// <summary>
+        /// Spawns a specified number of dust particles in a cone pattern around a given position pointing in a given angle.
+        /// </summary>
+        public static void SpawnConeDust(Vector2 position, int type, int limit, float radius = 20f, float angle = 0f, float coneWidth = 360f, float speed = 2.5f, float scaleMultiplier = 1f, bool noGravity = true)
+        {
+            SpawnDustInternal(position, type, limit, radius, radius, speed, scaleMultiplier, noGravity, MathHelper.ToRadians(angle), coneWidth);
         }
     }
 }
