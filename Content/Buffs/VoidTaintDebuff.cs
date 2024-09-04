@@ -31,10 +31,10 @@ namespace Arathia.Content.Buffs
 
             DebuffHelper.DamagePerSecond(npc, buffIndex, 100);
 
-            // Spawn dust 25% of the time
-            if (Main.rand.NextBool(4))
+            // Spawn dust 50% of the time
+            if (Main.rand.NextBool(2))
             {
-                DustHelper.SpawnEllipseDust(npc.Center, DustID.PurpleMoss, npc.width / 2, npc.width, npc.height, 1.5f);
+                DustHelper.SpawnEllipseDust(npc.Center, ModContent.DustType<VoidDust>(), npc.width / 5, npc.width, npc.height, 1f);
             }
         }
     }
