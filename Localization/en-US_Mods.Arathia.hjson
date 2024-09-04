@@ -63,6 +63,11 @@ Items: {
 		DisplayName: Tsukikage Ore
 		Tooltip: ""
 	}
+
+	EridusEmbrace: {
+		DisplayName: Eridus Embrace
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -79,6 +84,11 @@ Buffs: {
 	FrigidBlazeDebuff: {
 		DisplayName: Frigid Blaze Debuff
 		Description: Mods.Arathia.Buffs.FrigidBlazeDebuff.Description
+	}
+
+	VoidTaintDebuff: {
+		DisplayName: Void Taint Debuff
+		Description: Mods.Arathia.Buffs.VoidTaintDebuff.Description
 	}
 }
 
