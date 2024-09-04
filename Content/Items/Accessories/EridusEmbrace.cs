@@ -4,6 +4,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Arathia.Content.Buffs;
+using Arathia.Common.GlobalNPCs;
 
 namespace Arathia.Content.Items.Accessories
 {
@@ -45,7 +47,8 @@ namespace Arathia.Content.Items.Accessories
         {
             if (voidTaint)
             {
-                target.AddBuff(ModContent.BuffType<Buffs.VoidTaintDebuff>(), 480); // 8 sec
+                target.GetGlobalNPC<VoidTaintGlobalNPC>().damageMultiplier = DebuffHelper.GetTotalAdditiveDamage(Player, DamageClass.Generic, DamageClass.Magic);
+                target.AddBuff(ModContent.BuffType<VoidTaintDebuff>(), 480); // 8 sec
             }
             base.OnHitNPCWithItem(item, target, hit, damageDone);
         }
@@ -54,7 +57,8 @@ namespace Arathia.Content.Items.Accessories
         {
             if (voidTaint)
             {
-                target.AddBuff(ModContent.BuffType<Buffs.VoidTaintDebuff>(), 480); // 8 sec
+                target.GetGlobalNPC<VoidTaintGlobalNPC>().damageMultiplier = DebuffHelper.GetTotalAdditiveDamage(Player, DamageClass.Generic, DamageClass.Magic);
+                target.AddBuff(ModContent.BuffType<VoidTaintDebuff>(), 360); // 6 sec
             }
             base.OnHitNPCWithProj(proj, target, hit, damageDone);
         }

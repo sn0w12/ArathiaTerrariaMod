@@ -29,7 +29,7 @@ namespace Arathia.Content.Buffs
                 globalNPC.voidTaintApplied = true; // Mark as applied
             }
 
-            DebuffHelper.DamagePerSecond(npc, buffIndex, 100);
+            DebuffHelper.DamagePerSecond(npc, buffIndex, 100, globalNPC.damageMultiplier);
 
             // Spawn dust 50% of the time
             if (Main.rand.NextBool(2))
