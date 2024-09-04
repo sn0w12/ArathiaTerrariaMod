@@ -41,6 +41,7 @@ namespace Arathia.Utilities
 
             foreach (var damageClass in damageClasses)
             {
+                // Minus one for actual % difference
                 totalAdditiveDamage += player.GetDamage(damageClass).Additive - 1;
             }
 
