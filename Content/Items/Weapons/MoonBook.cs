@@ -13,12 +13,11 @@ namespace Arathia.Content.Items.Weapons
         {
             Item.DefaultToStaff(ModContent.ProjectileType<MoonProjectile>(), 0.2f, 90, 20);
             Item.UseSound = SoundID.Item71;
-            Item.SetWeaponValues(250, 6, 32);
+            Item.SetWeaponValues(600, 6, 32);
 
             Item.SetShopValues(ItemRarityColor.LightRed4, 10000);
         }
 
-        // Please see Content/ExampleRecipes.cs for a detailed explanation of recipe creation.
         public override void AddRecipes()
         {
             CreateRecipe()
