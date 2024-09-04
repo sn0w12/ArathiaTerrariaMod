@@ -75,11 +75,17 @@ Items: {
 			'''
 		DisplayName: Eridus' Embrace
 	}
+
+	MoonBook: {
+		DisplayName: Reiko’s Full Moon
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
 	RadianceProjectile.DisplayName: Radiance Projectile
 	RadianceMainProjectile.DisplayName: Radiance Main Projectile
+	MoonProjectile.DisplayName: Moon Projectile
 }
 
 Buffs: {
