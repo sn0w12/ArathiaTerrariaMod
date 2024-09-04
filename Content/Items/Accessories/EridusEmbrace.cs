@@ -11,11 +11,12 @@ namespace Arathia.Content.Items.Accessories
 {
     public class EridusEmbrace : ModItem
     {
+        public static readonly int AdditiveDamageBonus = 15;
         public static readonly int AggroBonus = 15;
         public static readonly int ManaCostBonus = 10;
 
         // Insert the modifier values into the tooltip localization. More info on this approach can be found on the wiki: https://github.com/tModLoader/tModLoader/wiki/Localization#binding-values-to-localizations
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(AggroBonus, ManaCostBonus);
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(AdditiveDamageBonus, AggroBonus, ManaCostBonus);
         public override void SetDefaults()
         {
             Item.width = 40;
@@ -28,6 +29,7 @@ namespace Arathia.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            player.GetDamage(DamageClass.Magic) += AdditiveDamageBonus / 100f;
             player.aggro -= AggroBonus;
             player.manaCost -= StatHelper.ConvertToOneXFormat(ManaCostBonus);
             player.GetModPlayer<EridusPlayer>().voidTaint = true;
