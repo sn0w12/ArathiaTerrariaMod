@@ -41,10 +41,10 @@ namespace Arathia.Utilities
 
             foreach (var damageClass in damageClasses)
             {
-                totalAdditiveDamage += player.GetDamage(damageClass).Additive;
+                totalAdditiveDamage += player.GetDamage(damageClass).Additive - 1;
             }
 
-            return totalAdditiveDamage;
+            return 1 + totalAdditiveDamage;
         }
     }
 }
