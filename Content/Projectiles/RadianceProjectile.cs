@@ -49,62 +49,8 @@ namespace Arathia.Content.Projectiles
         {
             // Get the texture of the projectile
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-
-            // Number of trail segments (more segments = longer and smoother trail)
-            int trailLength = 10;
-
-            // Ensure we don't try to access more old positions than available
-            int maxTrailLength = Math.Min(trailLength, Projectile.oldPos.Length);
-
-            if (maxTrailLength > 0)
-            {
-                Vector2 firstTrailPosition = Projectile.oldPos[0] + Projectile.Size / 2f;
-
-                // Apply a random vertical offset to the dust position
-                float randomHeightOffset = Main.rand.NextFloat(-Projectile.height / 2f, Projectile.height / 2f);
-
-                // Create a vector representing the offset from the center of the projectile
-                Vector2 offset = new Vector2(-Math.Abs(randomHeightOffset) * 0.5f, randomHeightOffset);
-
-                // Rotate the offset vector by the projectile's rotation
-                Vector2 rotatedOffset = offset.RotatedBy(Projectile.rotation);
-
-                // Apply the rotated offset to the firstTrailPosition
-                firstTrailPosition += rotatedOffset;
-
-                // Adjust the dust velocity to shoot backward
-                Vector2 dustVelocity = -Projectile.velocity * 0.5f;
-
-                // Create the dust
-                Dust dust = Dust.NewDustPerfect(firstTrailPosition, DustID.GoldFlame, dustVelocity);
-                dust.noGravity = true;
-                dust.scale = 1.5f; // Adjust scale as needed
-                dust.fadeIn = 0.75f; // Makes the dust fade in
-            }
-
-            // Loop to draw each trail segment
-            for (int i = 0; i < maxTrailLength; i += 2)
-            {
-                // Calculate the position for this trail segment
-                Vector2 trailPosition = Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition;
-
-                // Calculate the opacity for this segment (fades out towards the end of the trail)
-                float opacity = 0.5f * (1f - (float)i / maxTrailLength);
-                float scale = Projectile.scale * (1f - 0.1f * ((float)i / maxTrailLength));
-
-                // Draw the projectile's trail segment with the calculated opacity
-                Main.spriteBatch.Draw(
-                    texture,
-                    trailPosition,
-                    null,
-                    lightColor * opacity,
-                    Projectile.rotation,
-                    texture.Size() / 2f,
-                    scale,
-                    SpriteEffects.None,
-                    0f
-                );
-            }
+            ProjectileHelper.DrawImageTrail(Projectile, texture, lightColor, 2);
+            ProjectileHelper.DrawDustTrail(Projectile, texture, ModContent.DustType<SolarDust>(), 0.1f, 1.2f);
 
             // Continue with the normal drawing (to draw the main projectile itself)
             return true;

@@ -34,52 +34,23 @@ namespace Arathia.Content.Projectiles
 
         public override void SetDefaults()
         {
-            Projectile.width = 60; // The width of projectile hitbox
-            Projectile.height = 30; // The height of projectile hitbox
+            Projectile.width = 30;
+            Projectile.height = 30;
 
-            Projectile.DamageType = DamageClass.Melee; // What type of damage does this projectile affect?
+            Projectile.DamageType = DamageClass.Melee;
             Projectile.penetrate = 3;
-            Projectile.friendly = true; // Can the projectile deal damage to enemies?
-            Projectile.hostile = false; // Can the projectile deal damage to the player?
-            Projectile.ignoreWater = true; // Does the projectile's speed be influenced by water?
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 90; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
+            Projectile.timeLeft = 90;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
             // Get the texture of the projectile
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-
-            // Number of trail segments (more segments = longer and smoother trail)
-            int trailLength = 10;
-
-            // Ensure we don't try to access more old positions than available
-            int maxTrailLength = Math.Min(trailLength, Projectile.oldPos.Length);
-
-            // Loop to draw each trail segment
-            for (int i = 0; i < maxTrailLength; i++)
-            {
-                // Calculate the position for this trail segment
-                Vector2 trailPosition = Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition;
-
-                // Calculate the opacity for this segment (fades out towards the end of the trail)
-                float opacity = 0.5f * (1f - (float)i / maxTrailLength);
-                float scale = Projectile.scale * (1f - 0.15f * ((float)i / maxTrailLength));
-
-                // Draw the projectile's trail segment with the calculated opacity
-                Main.spriteBatch.Draw(
-                    texture,
-                    trailPosition,
-                    null,
-                    lightColor * opacity,
-                    Projectile.rotation,
-                    texture.Size() / 2f,
-                    scale,
-                    SpriteEffects.None,
-                    0f
-                );
-            }
+            ProjectileHelper.DrawImageTrail(Projectile, texture, lightColor);
 
             // Continue with the normal drawing (to draw the main projectile itself)
             return true;
