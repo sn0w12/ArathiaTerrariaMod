@@ -21,8 +21,8 @@ namespace Arathia.Content.Items.Weapons
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient<TsukiBar>(15)
-                .AddIngredient(ItemID.Book)
+                .AddIngredient<MoonBook>(1)
+                .AddIngredient(ItemID.FragmentSolar, 20)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }
