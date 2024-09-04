@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Arathia.Utilities
 {
@@ -18,6 +19,18 @@ namespace Arathia.Utilities
                     npc.StrikeNPC(hitInfo);
                 }
             }
+        }
+
+        public static float GetTotalAdditiveDamage(Player player, params DamageClass[] damageClasses)
+        {
+            float totalAdditiveDamage = 0f;
+
+            foreach (var damageClass in damageClasses)
+            {
+                totalAdditiveDamage += player.GetDamage(damageClass).Additive;
+            }
+
+            return totalAdditiveDamage;
         }
     }
 }

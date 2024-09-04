@@ -60,7 +60,7 @@ namespace Arathia.Content.Items.Accessories
         {
             if (holyFlame && item.DamageType == DamageClass.Melee)
             {
-                target.GetGlobalNPC<HolyFlameGlobalNPC>().damageMultiplier = Player.GetDamage(DamageClass.Melee).Additive;
+                target.GetGlobalNPC<HolyFlameGlobalNPC>().damageMultiplier = DebuffHelper.GetTotalAdditiveDamage(Player, DamageClass.Generic, DamageClass.Melee);
                 target.AddBuff(ModContent.BuffType<Buffs.HolyFlameDebuff>(), 480); // 8 sec
             }
             base.OnHitNPCWithItem(item, target, hit, damageDone);
@@ -70,7 +70,7 @@ namespace Arathia.Content.Items.Accessories
         {
             if (holyFlame && proj.DamageType == DamageClass.Melee)
             {
-                target.GetGlobalNPC<HolyFlameGlobalNPC>().damageMultiplier = Player.GetDamage(DamageClass.Melee).Additive;
+                target.GetGlobalNPC<HolyFlameGlobalNPC>().damageMultiplier = DebuffHelper.GetTotalAdditiveDamage(Player, DamageClass.Generic, DamageClass.Melee);
                 target.AddBuff(ModContent.BuffType<Buffs.HolyFlameDebuff>(), 240); // 4 sec
             }
             base.OnHitNPCWithProj(proj, target, hit, damageDone);
