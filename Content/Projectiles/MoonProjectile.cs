@@ -85,7 +85,7 @@ namespace Arathia.Content.Projectiles
 			// First, we find a homing target if we don't have one
 			if (HomingTarget == null)
 			{
-				HomingTarget = ProjectileHelper.FindValidTarget(Projectile, maxDetectRadius);
+				HomingTarget = ProjectileHelper.FindValidTargetPreferBoss(Projectile, maxDetectRadius);
 			}
 
 			// If we don't have a target, don't adjust trajectory

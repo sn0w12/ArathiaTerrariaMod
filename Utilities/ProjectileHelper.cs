@@ -48,9 +48,66 @@ namespace Arathia.Utilities
             return closestNPC;
         }
 
+        public static NPC FindClosestBoss(Projectile projectile, float maxDetectDistance)
+        {
+            NPC closestNPC = null;
+            NPC closestBoss = null;
+
+            // Using squared values in distance checks to avoid expensive square root calculations.
+            float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
+            float sqrMaxBossDetectDistance = sqrMaxDetectDistance; // Separate distance for boss detection.
+
+            // Loop through all NPCs
+            foreach (var target in Main.ActiveNPCs)
+            {
+                // Check if NPC can be targeted.
+                if (IsValidTarget(projectile, target))
+                {
+                    // Calculate squared distance between projectile and target
+                    float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, projectile.Center);
+
+                    // If this NPC is a boss, prefer it over other NPCs
+                    if (target.boss)
+                    {
+                        if (sqrDistanceToTarget < sqrMaxBossDetectDistance)
+                        {
+                            sqrMaxBossDetectDistance = sqrDistanceToTarget;
+                            closestBoss = target;
+                        }
+                    }
+                    else
+                    {
+                        // Check if it is within the radius and closer than the current closest NPC
+                        if (sqrDistanceToTarget < sqrMaxDetectDistance)
+                        {
+                            sqrMaxDetectDistance = sqrDistanceToTarget;
+                            closestNPC = target;
+                        }
+                    }
+                }
+            }
+
+            // Prefer the closest boss if found, otherwise return the closest regular NPC
+            return closestBoss ?? closestNPC;
+        }
+
+
         public static NPC FindValidTarget(Projectile projectile, float maxDetectDistance)
         {
             NPC HomingTarget = FindClosestNPC(projectile, maxDetectDistance);
+
+            // If we have a homing target, make sure it is still valid. If the NPC dies or moves away, we'll want to find a new target
+            if (HomingTarget != null && !IsValidTarget(projectile, HomingTarget))
+            {
+                HomingTarget = null;
+            }
+
+            return HomingTarget;
+        }
+
+        public static NPC FindValidTargetPreferBoss(Projectile projectile, float maxDetectDistance)
+        {
+            NPC HomingTarget = FindClosestBoss(projectile, maxDetectDistance);
 
             // If we have a homing target, make sure it is still valid. If the NPC dies or moves away, we'll want to find a new target
             if (HomingTarget != null && !IsValidTarget(projectile, HomingTarget))
