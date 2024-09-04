@@ -44,7 +44,7 @@ namespace Arathia.Content.Items.Accessories
             player.maxTurrets += SentryCapacityBonus; // Sentry Capacity +1
             player.statManaMax2 += ManaBonus; // Maximum Mana +40
             player.ammoCost80 = true;
-            player.GetModPlayer<ExampleStatBonusAccessoryPlayer>().exampleStatBonusAccessory = true;
+            player.GetModPlayer<WorldStonePlayer>().worldStone = true;
 
             if (!hideVisual && Main.rand.NextBool(10))
             {
@@ -102,19 +102,19 @@ namespace Arathia.Content.Items.Accessories
         }
     }
 
-    public class ExampleStatBonusAccessoryPlayer : ModPlayer
+    public class WorldStonePlayer : ModPlayer
     {
-        public bool exampleStatBonusAccessory = false;
+        public bool worldStone = false;
 
         public override void ResetEffects()
         {
-            exampleStatBonusAccessory = false;
+            worldStone = false;
         }
 
         public override void PostUpdateRunSpeeds()
         {
             // We only want our additional changes to apply if equipped and not on a mount.
-            if (Player.mount.Active || !exampleStatBonusAccessory)
+            if (Player.mount.Active || !worldStone)
             {
                 return;
             }
