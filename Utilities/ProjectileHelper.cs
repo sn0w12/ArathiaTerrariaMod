@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
+using Terraria.ModLoader;
 
 namespace Arathia.Utilities
 {
@@ -176,7 +177,7 @@ namespace Arathia.Utilities
             }
         }
 
-        public static void CreateExplosion(Projectile projectile, int dustId, SoundStyle sound, float explosionRadius = 100f, float speed = 7.5f, float dustScaleMultiplier = 1.5f)
+        public static void CreateExplosion(Projectile projectile, int dustId, SoundStyle sound, DamageClass damageType, float explosionRadius = 100f, float speed = 7.5f, float dustScaleMultiplier = 1.5f)
         {
             // Spawn visual effects (dust, sound, etc.)
             DustHelper.SpawnCircleDust(projectile.Center, dustId, (int)explosionRadius * 2, (int)explosionRadius / 10, speed, dustScaleMultiplier);
@@ -198,6 +199,7 @@ namespace Arathia.Utilities
                         NPC.HitInfo hitInfo = new()
                         {
                             Damage = projectile.damage,
+                            DamageType = damageType,
                             Knockback = 5f,
                             HitDirection = (projectile.Center.X < npc.Center.X) ? 1 : -1,
                         };

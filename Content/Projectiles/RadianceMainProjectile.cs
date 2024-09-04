@@ -151,7 +151,7 @@ namespace Arathia.Content.Projectiles
         {
             if (totalSummonedProjectiles > 0)
             {
-                ProjectileHelper.CreateExplosion(Projectile, ModContent.DustType<SolarDust>(), SoundID.Item74);
+                ProjectileHelper.CreateExplosion(Projectile, ModContent.DustType<SolarDust>(), SoundID.Item74, DamageClass.Generic);
             }
             else
             {

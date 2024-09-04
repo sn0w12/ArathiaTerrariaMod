@@ -105,7 +105,7 @@ namespace Arathia.Content.Projectiles
 
 		public override void OnKill(int timeLeft)
 		{
-			ProjectileHelper.CreateExplosion(Projectile, DustID.Stone, SoundID.Item62, 300f, 15f);
+			ProjectileHelper.CreateExplosion(Projectile, DustID.Stone, SoundID.Item62, DamageClass.Magic, 300f, 15f);
 		}
 	}
 }
