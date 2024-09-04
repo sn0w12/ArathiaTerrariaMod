@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 
 namespace Arathia.Utilities
 {
@@ -172,6 +173,39 @@ namespace Arathia.Utilities
             if (dustScale > 0)
             {
                 dust.scale = dustScale;
+            }
+        }
+
+        public static void CreateExplosion(Projectile projectile, int dustId, SoundStyle sound, float explosionRadius = 100f, float speed = 7.5f, float dustScaleMultiplier = 1.5f)
+        {
+            // Spawn visual effects (dust, sound, etc.)
+            DustHelper.SpawnCircleDust(projectile.Center, dustId, (int)explosionRadius * 2, (int)explosionRadius / 10, speed, dustScaleMultiplier);
+            SoundEngine.PlaySound(sound, projectile.position);
+
+            // Damage all nearby NPCs within the explosion radius
+            for (int i = 0; i < Main.maxNPCs; i++)
+            {
+                NPC npc = Main.npc[i];
+                if (IsValidTarget(projectile, npc))
+                {
+                    // Calculate the distance from the projectile to the NPC
+                    float distance = Vector2.Distance(projectile.Center, npc.Center);
+
+                    // If the NPC is within the explosion radius, apply damage
+                    if (distance <= explosionRadius)
+                    {
+                        // Create a HitInfo object to specify the damage details
+                        NPC.HitInfo hitInfo = new()
+                        {
+                            Damage = projectile.damage,
+                            Knockback = 5f,
+                            HitDirection = (projectile.Center.X < npc.Center.X) ? 1 : -1,
+                        };
+
+                        // Apply the damage to the NPC
+                        npc.StrikeNPC(hitInfo);
+                    }
+                }
             }
         }
     }
