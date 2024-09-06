@@ -49,7 +49,7 @@ namespace Arathia.Content.Items.Accessories
         {
             if (voidTaint)
             {
-                target.GetGlobalNPC<VoidTaintGlobalNPC>().damageMultiplier = DebuffHelper.GetTotalAdditiveDamage(Player, DamageClass.Generic, DamageClass.Magic);
+                target.GetGlobalNPC<VoidTaintGlobalNPC>().damageMultiplier = DamageHelper.GetTotalAdditiveDamage(Player, DamageClass.Generic, DamageClass.Magic);
                 target.AddBuff(ModContent.BuffType<VoidTaintDebuff>(), 480); // 8 sec
             }
             base.OnHitNPCWithItem(item, target, hit, damageDone);
@@ -59,7 +59,7 @@ namespace Arathia.Content.Items.Accessories
         {
             if (voidTaint)
             {
-                target.GetGlobalNPC<VoidTaintGlobalNPC>().damageMultiplier = DebuffHelper.GetTotalAdditiveDamage(Player, DamageClass.Generic, DamageClass.Magic);
+                target.GetGlobalNPC<VoidTaintGlobalNPC>().damageMultiplier = DamageHelper.GetTotalAdditiveDamage(Player, DamageClass.Generic, DamageClass.Magic);
                 target.AddBuff(ModContent.BuffType<VoidTaintDebuff>(), 360); // 6 sec
             }
             base.OnHitNPCWithProj(proj, target, hit, damageDone);
