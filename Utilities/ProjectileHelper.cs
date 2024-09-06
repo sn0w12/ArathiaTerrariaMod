@@ -58,6 +58,10 @@ namespace Arathia.Utilities
             return closestNPC;
         }
 
+        /// <summary>
+        /// Finds the closest valid NPC to the projectile within the specified maximum detection distance If there is a boss anywhere in the range it will return the boss.
+        /// </summary>
+        /// <returns>The closest NPC if found, otherwise returns null.</returns>
         public static NPC FindClosestNPCPreferBoss(Projectile projectile, float maxDetectDistance)
         {
             NPC closestNPC = null;
