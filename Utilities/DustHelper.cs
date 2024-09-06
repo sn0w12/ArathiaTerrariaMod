@@ -75,7 +75,6 @@ namespace Arathia.Utilities
             }
         }
 
-
         /// <summary>
         /// Spawns a specified number of dust particles in a circular pattern around a given position.
         /// </summary>

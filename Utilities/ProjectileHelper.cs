@@ -9,6 +9,10 @@ namespace Arathia.Utilities
 {
     public static class ProjectileHelper
     {
+        /// <summary>
+        /// Checks if the specified NPC is a valid target for the projectile.
+        /// The target must be active, hostile, can take damage, and must not have solid tiles blocking the line of sight.
+        /// </summary>
         public static bool IsValidTarget(Projectile projectile, NPC target)
         {
             // This method checks that the NPC is:
@@ -22,6 +26,10 @@ namespace Arathia.Utilities
             return target.CanBeChasedBy() && Collision.CanHit(projectile.Center, 1, 1, target.position, target.width, target.height);
         }
 
+        /// <summary>
+        /// Finds the closest valid NPC to the projectile within the specified maximum detection distance.
+        /// </summary>
+        /// <returns>The closest NPC if found, otherwise returns null.</returns>
         public static NPC FindClosestNPC(Projectile projectile, float maxDetectDistance)
         {
             NPC closestNPC = null;
@@ -50,7 +58,7 @@ namespace Arathia.Utilities
             return closestNPC;
         }
 
-        public static NPC FindClosestBoss(Projectile projectile, float maxDetectDistance)
+        public static NPC FindClosestNPCPreferBoss(Projectile projectile, float maxDetectDistance)
         {
             NPC closestNPC = null;
             NPC closestBoss = null;
@@ -93,7 +101,10 @@ namespace Arathia.Utilities
             return closestBoss ?? closestNPC;
         }
 
-
+        /// <summary>
+        /// Finds the closest valid NPC target for homing purposes.
+        /// If the current homing target becomes invalid, it returns null.
+        /// </summary>
         public static NPC FindValidTarget(Projectile projectile, float maxDetectDistance)
         {
             NPC HomingTarget = FindClosestNPC(projectile, maxDetectDistance);
@@ -107,9 +118,13 @@ namespace Arathia.Utilities
             return HomingTarget;
         }
 
+        /// <summary>
+        /// Finds the closest valid NPC or boss target for homing purposes, preferring bosses if available.
+        /// If the current homing target becomes invalid, it returns null.
+        /// </summary>
         public static NPC FindValidTargetPreferBoss(Projectile projectile, float maxDetectDistance)
         {
-            NPC HomingTarget = FindClosestBoss(projectile, maxDetectDistance);
+            NPC HomingTarget = FindClosestNPCPreferBoss(projectile, maxDetectDistance);
 
             // If we have a homing target, make sure it is still valid. If the NPC dies or moves away, we'll want to find a new target
             if (HomingTarget != null && !IsValidTarget(projectile, HomingTarget))
@@ -120,6 +135,9 @@ namespace Arathia.Utilities
             return HomingTarget;
         }
 
+        /// <summary>
+        /// Draws a trail behind the projectile using a texture, with each trail segment fading out and scaling down over time.
+        /// </summary>
         public static void DrawImageTrail(Projectile projectile, Texture2D texture, Color lightColor, int drawEvery = 1)
         {
             // Ensure we don't try to access more old positions than available
@@ -153,6 +171,9 @@ namespace Arathia.Utilities
             }
         }
 
+        /// <summary>
+        /// Creates a dust trail behind the projectile using the specified dust ID and optional velocity multiplier and dust scale.
+        /// </summary>
         public static void DrawDustTrail(Projectile projectile, Texture2D texture, int dustId, float velocityMultiplier = 1f, float dustScale = 0f)
         {
             Vector2 firstTrailPosition = projectile.oldPos[0] + texture.Size() / 2f;
@@ -177,6 +198,9 @@ namespace Arathia.Utilities
             }
         }
 
+        /// <summary>
+        /// Creates an explosion at the projectile's position, spawning visual effects (dust) and applying damage to nearby NPCs within the explosion radius.
+        /// </summary>
         public static void CreateExplosion(Projectile projectile, int dustId, SoundStyle sound, DamageClass damageType, float explosionRadius = 100f, float speed = 7.5f, float dustScaleMultiplier = 1.5f)
         {
             // Spawn visual effects (dust, sound, etc.)
