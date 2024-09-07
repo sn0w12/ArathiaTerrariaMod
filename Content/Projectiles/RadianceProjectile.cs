@@ -77,21 +77,12 @@ namespace Arathia.Content.Projectiles
                 return;
             }
 
-            // If we have a homing target, make sure it is still valid. If the NPC dies or moves away, we'll want to find a new target
-            if (HomingTarget != null && !ProjectileHelper.IsValidTarget(Projectile, HomingTarget))
-            {
-                HomingTarget = null;
-            }
-
             // First, we find a homing target if we don't have one
+            HomingTarget = ProjectileHelper.FindValidTarget(Projectile, maxDetectRadius, HomingTarget);
+            // If we don't have a target, don't adjust trajectory
             if (HomingTarget == null)
             {
-                HomingTarget = ProjectileHelper.FindValidTarget(Projectile, maxDetectRadius);
-                // If we don't have a target, don't adjust trajectory
-                if (HomingTarget == null)
-                {
-                    return;
-                }
+                return;
             }
 
             // If found, we rotate the projectile velocity in the direction of the target.

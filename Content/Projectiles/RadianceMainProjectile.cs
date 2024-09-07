@@ -92,14 +92,11 @@ namespace Arathia.Content.Projectiles
             }
 
             // First, we find a homing target if we don't have one
+            HomingTarget = ProjectileHelper.FindValidTarget(Projectile, maxDetectRadius, HomingTarget);
+            // If we don't have a target, don't adjust trajectory
             if (HomingTarget == null)
             {
-                HomingTarget = ProjectileHelper.FindValidTarget(Projectile, maxDetectRadius);
-                // If we don't have a target, don't adjust trajectory
-                if (HomingTarget == null)
-                {
-                    return;
-                }
+                return;
             }
 
             // Only summon a new projectile if the cooldown has expired
