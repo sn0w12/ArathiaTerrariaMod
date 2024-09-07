@@ -3,12 +3,16 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace Arathia.Utilities
 {
     public static class ProjectileHelper
     {
+        static NPC ClosestNPC = null;
+        static NPC ClosestBoss = null;
+
         /// <summary>
         /// Checks if the specified NPC is a valid target for the projectile.
         /// The target must be active, hostile, can take damage, and must not have solid tiles blocking the line of sight.
@@ -26,46 +30,11 @@ namespace Arathia.Utilities
             return target.CanBeChasedBy() && Collision.CanHit(projectile.Center, 1, 1, target.position, target.width, target.height);
         }
 
-        /// <summary>
-        /// Finds the closest valid NPC to the projectile within the specified maximum detection distance.
-        /// </summary>
-        /// <returns>The closest NPC if found, otherwise returns null.</returns>
-        public static NPC FindClosestNPC(Projectile projectile, float maxDetectDistance)
-        {
-            NPC closestNPC = null;
-
-            // Using squared values in distance checks will let us skip square root calculations, drastically improving this method's speed.
-            float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
-
-            // Loop through all NPCs
-            foreach (var target in Main.ActiveNPCs)
-            {
-                // Check if NPC able to be targeted.
-                if (IsValidTarget(projectile, target))
-                {
-                    // The DistanceSquared function returns a squared distance between 2 points, skipping relatively expensive square root calculations
-                    float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, projectile.Center);
-
-                    // Check if it is within the radius
-                    if (sqrDistanceToTarget < sqrMaxDetectDistance)
-                    {
-                        sqrMaxDetectDistance = sqrDistanceToTarget;
-                        closestNPC = target;
-                    }
-                }
-            }
-
-            return closestNPC;
-        }
-
-        /// <summary>
-        /// Finds the closest valid NPC to the projectile within the specified maximum detection distance If there is a boss anywhere in the range it will return the boss.
-        /// </summary>
-        /// <returns>The closest NPC if found, otherwise returns null.</returns>
-        public static NPC FindClosestNPCPreferBoss(Projectile projectile, float maxDetectDistance)
+        public static (NPC closestBoss, NPC closestNPC, NPC closestTarget) FindClosestNPCs(Projectile projectile, float maxDetectDistance)
         {
             NPC closestNPC = null;
             NPC closestBoss = null;
+            NPC closestTarget = null;
 
             // Using squared values in distance checks to avoid expensive square root calculations.
             float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
@@ -80,21 +49,21 @@ namespace Arathia.Utilities
                     // Calculate squared distance between projectile and target
                     float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, projectile.Center);
 
-                    // If this NPC is a boss, prefer it over other NPCs
-                    if (target.boss)
+                    // Check if it is within the radius and closer than the current closest NPC
+                    if (sqrDistanceToTarget < sqrMaxDetectDistance)
                     {
-                        if (sqrDistanceToTarget < sqrMaxBossDetectDistance)
+                        sqrMaxDetectDistance = sqrDistanceToTarget;
+                        closestTarget = target;
+                        if (target.boss)
                         {
-                            sqrMaxBossDetectDistance = sqrDistanceToTarget;
-                            closestBoss = target;
+                            if (sqrDistanceToTarget < sqrMaxBossDetectDistance)
+                            {
+                                sqrMaxBossDetectDistance = sqrDistanceToTarget;
+                                closestBoss = target;
+                            }
                         }
-                    }
-                    else
-                    {
-                        // Check if it is within the radius and closer than the current closest NPC
-                        if (sqrDistanceToTarget < sqrMaxDetectDistance)
+                        else
                         {
-                            sqrMaxDetectDistance = sqrDistanceToTarget;
                             closestNPC = target;
                         }
                     }
@@ -102,16 +71,22 @@ namespace Arathia.Utilities
             }
 
             // Prefer the closest boss if found, otherwise return the closest regular NPC
-            return closestBoss ?? closestNPC;
+            return (closestBoss, closestNPC, closestTarget);
         }
 
         /// <summary>
         /// Finds the closest valid NPC target for homing purposes.
         /// If the current homing target becomes invalid, it returns null.
         /// </summary>
-        public static NPC FindValidTarget(Projectile projectile, float maxDetectDistance)
+        public static NPC FindValidTarget(Projectile projectile, float maxDetectDistance, NPC HomingTarget = null)
         {
-            NPC HomingTarget = FindClosestNPC(projectile, maxDetectDistance);
+            if (HomingTarget != null && IsValidTarget(projectile, HomingTarget))
+            {
+                return HomingTarget;
+            }
+
+            var (closestBoss, closestNPC, closestTarget) = FindClosestNPCs(projectile, maxDetectDistance);
+            HomingTarget = closestTarget;
 
             // If we have a homing target, make sure it is still valid. If the NPC dies or moves away, we'll want to find a new target
             if (HomingTarget != null && !IsValidTarget(projectile, HomingTarget))
@@ -126,9 +101,15 @@ namespace Arathia.Utilities
         /// Finds the closest valid NPC or boss target for homing purposes, preferring bosses if available.
         /// If the current homing target becomes invalid, it returns null.
         /// </summary>
-        public static NPC FindValidTargetPreferBoss(Projectile projectile, float maxDetectDistance)
+        public static NPC FindValidTargetPreferBoss(Projectile projectile, float maxDetectDistance, NPC HomingTarget = null)
         {
-            NPC HomingTarget = FindClosestNPCPreferBoss(projectile, maxDetectDistance);
+            if (HomingTarget != null && IsValidTarget(projectile, HomingTarget))
+            {
+                return HomingTarget;
+            }
+
+            var (closestBoss, closestNPC, closestTarget) = FindClosestNPCs(projectile, maxDetectDistance);
+            HomingTarget = closestBoss ?? closestNPC;
 
             // If we have a homing target, make sure it is still valid. If the NPC dies or moves away, we'll want to find a new target
             if (HomingTarget != null && !IsValidTarget(projectile, HomingTarget))
@@ -240,6 +221,29 @@ namespace Arathia.Utilities
                     }
                 }
             }
+        }
+
+        public static int ShootProjectile(IEntitySource spawnSource, Vector2 position, int damage, float knockBack, int projectileType, float speed, float angle)
+        {
+            float angleInRadians = MathHelper.ToRadians(angle);
+            Vector2 velocity = new Vector2((float)Math.Cos(angleInRadians), (float)Math.Sin(angleInRadians)) * speed;
+
+            int newProjectileId = Projectile.NewProjectile(
+                spawnSource,
+                position,
+                velocity,
+                projectileType,
+                damage,
+                knockBack,
+                Main.myPlayer
+            );
+
+            return newProjectileId;
+        }
+
+        public static int ShootProjectileFromProjectile(Projectile projectile, int projectileType, float speed, float angle)
+        {
+            return ShootProjectile(projectile.GetSource_FromThis(), projectile.Center, projectile.damage, projectile.knockBack, projectileType, speed, angle);
         }
     }
 }
