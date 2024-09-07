@@ -20,9 +20,7 @@ namespace Arathia.Content.Dusts
             dust.velocity = new Vector2(Main.rand.NextFloat(-0.5f, 0.5f), -Main.rand.NextFloat(1f, 2f));
 
             // Set the texture frame to use the same as SolarDust
-            int desiredVanillaDustTexture = DustID.GoldFlame;
-            int frameX = desiredVanillaDustTexture * 10 % 1000;
-            int frameY = desiredVanillaDustTexture * 10 / 1000 * 30 + Main.rand.Next(3) * 10;
+            var (frameX, frameY) = DustHelper.GetVanillaTexture(DustID.GoldFlame);
             dust.frame = new Rectangle(frameX, frameY, 8, 8);
         }
 

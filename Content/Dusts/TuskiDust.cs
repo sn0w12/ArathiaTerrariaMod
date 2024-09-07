@@ -3,6 +3,7 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Terraria.ID;
 using System;
+using Arathia.Utilities;
 
 namespace Arathia.Content.Dusts
 {
@@ -20,9 +21,7 @@ namespace Arathia.Content.Dusts
             float angle = Main.rand.NextFloat(MathHelper.TwoPi); // Random angle in radians
             dust.velocity = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * speed;
 
-            int desiredVanillaDustTexture = 176;
-            int frameX = desiredVanillaDustTexture * 10 % 1000;
-            int frameY = desiredVanillaDustTexture * 10 / 1000 * 30 + Main.rand.Next(3) * 10;
+            var (frameX, frameY) = DustHelper.GetVanillaTexture(176);
             dust.frame = new Rectangle(frameX, frameY, 8, 8);
         }
 

@@ -30,6 +30,14 @@ namespace Arathia.Utilities
             return new Vector3(normalizedR * lightIntensity, normalizedG * lightIntensity, normalizedB * lightIntensity);
         }
 
+        public static (int frameX, int frameY) GetVanillaTexture(int dustId)
+        {
+            int desiredVanillaDustTexture = dustId;
+            int frameX = desiredVanillaDustTexture * 10 % 1000;
+            int frameY = desiredVanillaDustTexture * 10 / 1000 * 30 + Main.rand.Next(3) * 10;
+            return (frameX, frameY);
+        }
+
         private static void SpawnDustInternal(Vector2 position, int type, int limit, float radiusX, float radiusY, float speed = 2.5f, float scaleMultiplier = 1f, bool noGravity = true, float angle = 0f, float coneWidth = 360f)
         {
             // Convert the cone width from degrees to radians

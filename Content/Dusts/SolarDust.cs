@@ -15,9 +15,7 @@ namespace Arathia.Content.Dusts
             dust.noLight = false; // Emits light
             dust.scale = 1.2f; // Size of the dust
 
-            int desiredVanillaDustTexture = DustID.GoldFlame;
-            int frameX = desiredVanillaDustTexture * 10 % 1000;
-            int frameY = desiredVanillaDustTexture * 10 / 1000 * 30 + Main.rand.Next(3) * 10;
+            var (frameX, frameY) = DustHelper.GetVanillaTexture(DustID.GoldFlame);
             dust.frame = new Rectangle(frameX, frameY, 8, 8);
         }
 
