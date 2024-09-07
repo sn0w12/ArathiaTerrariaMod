@@ -65,6 +65,7 @@ namespace Arathia.Content.Projectiles
         public override void AI()
         {
             const float waitTimeBeforeHoming = 30f;
+            Projectile.timeLeft += Main.rand.Next(-2, 3);
 
             if (State == 0) // Phase 1: Slow down until it stops
             {

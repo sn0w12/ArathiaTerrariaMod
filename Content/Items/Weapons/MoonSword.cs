@@ -13,7 +13,7 @@ namespace Arathia.Content.Items.Weapons
 {
     public class MoonSword : ModItem
     {
-
+        static int randomRotation = 45;
         public override void SetDefaults()
         {
             int useTime = 35;
@@ -56,7 +56,8 @@ namespace Arathia.Content.Items.Weapons
 
                 // Calculate velocity for each projectile based on the angle
                 Vector2 shootDirection = new Vector2((float)Math.Cos(currentAngle), (float)Math.Sin(currentAngle)) * velocity.Length();
-                ProjectileHelper.ShootProjectile(player.GetSource_FromThis(), position, damage, knockback, type, shootDirection.Length(), MathHelper.ToDegrees(currentAngle));
+                int projectileId = ProjectileHelper.ShootProjectile(player.GetSource_FromThis(), position, damage, knockback, type, shootDirection.Length(), MathHelper.ToDegrees(currentAngle));
+                Main.projectile[projectileId].rotation = MathHelper.ToRadians(Main.rand.Next(-randomRotation, randomRotation + 1));
             }
 
             return false; // Prevent the vanilla projectile from being shot
