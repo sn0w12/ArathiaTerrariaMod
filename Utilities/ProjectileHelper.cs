@@ -74,11 +74,7 @@ namespace Arathia.Utilities
             return (closestBoss, closestNPC, closestTarget);
         }
 
-        /// <summary>
-        /// Finds the closest valid NPC target for homing purposes.
-        /// If the current homing target becomes invalid, it returns null.
-        /// </summary>
-        public static NPC FindValidTarget(Projectile projectile, float maxDetectDistance, NPC HomingTarget = null)
+        private static NPC FindValidTargetInternal(Projectile projectile, float maxDetectDistance, NPC HomingTarget = null, Func<NPC, NPC, NPC, NPC> targetSelector = null)
         {
             if (HomingTarget != null && IsValidTarget(projectile, HomingTarget))
             {
@@ -86,7 +82,7 @@ namespace Arathia.Utilities
             }
 
             var (closestBoss, closestNPC, closestTarget) = FindClosestNPCs(projectile, maxDetectDistance);
-            HomingTarget = closestTarget;
+            HomingTarget = targetSelector != null ? targetSelector(closestBoss, closestNPC, closestTarget) : closestTarget;
 
             // If we have a homing target, make sure it is still valid. If the NPC dies or moves away, we'll want to find a new target
             if (HomingTarget != null && !IsValidTarget(projectile, HomingTarget))
@@ -98,26 +94,21 @@ namespace Arathia.Utilities
         }
 
         /// <summary>
+        /// Finds the closest valid NPC target for homing purposes.
+        /// If the current homing target becomes invalid, it returns null.
+        /// </summary>
+        public static NPC FindValidTarget(Projectile projectile, float maxDetectDistance, NPC HomingTarget = null)
+        {
+            return FindValidTargetInternal(projectile, maxDetectDistance, HomingTarget, (closestBoss, closestNPC, closestTarget) => closestTarget);
+        }
+
+        /// <summary>
         /// Finds the closest valid NPC or boss target for homing purposes, preferring bosses if available.
         /// If the current homing target becomes invalid, it returns null.
         /// </summary>
         public static NPC FindValidTargetPreferBoss(Projectile projectile, float maxDetectDistance, NPC HomingTarget = null)
         {
-            if (HomingTarget != null && IsValidTarget(projectile, HomingTarget))
-            {
-                return HomingTarget;
-            }
-
-            var (closestBoss, closestNPC, closestTarget) = FindClosestNPCs(projectile, maxDetectDistance);
-            HomingTarget = closestBoss ?? closestNPC;
-
-            // If we have a homing target, make sure it is still valid. If the NPC dies or moves away, we'll want to find a new target
-            if (HomingTarget != null && !IsValidTarget(projectile, HomingTarget))
-            {
-                HomingTarget = null;
-            }
-
-            return HomingTarget;
+            return FindValidTargetInternal(projectile, maxDetectDistance, HomingTarget, (closestBoss, closestNPC, closestTarget) => closestBoss ?? closestNPC);
         }
 
         /// <summary>
