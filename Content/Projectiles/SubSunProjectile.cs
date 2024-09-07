@@ -59,7 +59,7 @@ namespace Arathia.Content.Projectiles
 
 		public override void AI()
 		{
-			float maxDetectRadius = 800f; // The maximum radius at which a projectile can detect a target
+			float maxDetectRadius = 1000f; // The maximum radius at which a projectile can detect a target
 			float accelerationRate = 1.025f;
 
 			// A short delay to homing behavior after being fired
