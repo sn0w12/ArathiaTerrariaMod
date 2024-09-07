@@ -85,6 +85,11 @@ Items: {
 		DisplayName: Sun Moon Book
 		Tooltip: ""
 	}
+
+	MoonSword: {
+		DisplayName: Moon Sword
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -95,6 +100,7 @@ Projectiles: {
 	SubMoonProjectile.DisplayName: Sub Moon Projectile
 	SunMoonSubProjectile.DisplayName: Sun Moon Sub Projectile
 	SubSunProjectile.DisplayName: Sub Sun Projectile
+	SmallMoonProjectile.DisplayName: Small Moon Projectile
 }
 
 Buffs: {
