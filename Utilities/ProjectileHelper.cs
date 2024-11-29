@@ -10,9 +10,6 @@ namespace Arathia.Utilities
 {
     public static class ProjectileHelper
     {
-        static NPC ClosestNPC = null;
-        static NPC ClosestBoss = null;
-
         /// <summary>
         /// Checks if the specified NPC is a valid target for the projectile.
         /// The target must be active, hostile, can take damage, and must not have solid tiles blocking the line of sight.
