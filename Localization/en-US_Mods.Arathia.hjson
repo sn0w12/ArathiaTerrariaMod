@@ -90,6 +90,11 @@ Items: {
 		DisplayName: Moon Sword
 		Tooltip: ""
 	}
+
+	MoonStoneSword: {
+		DisplayName: Moon Stone Greatsword
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -101,6 +106,16 @@ Projectiles: {
 	SunMoonSubProjectile.DisplayName: Sun Moon Sub Projectile
 	SubSunProjectile.DisplayName: Sub Sun Projectile
 	SmallMoonProjectile.DisplayName: Small Moon Projectile
+	MoonStoneSwordProjectile.DisplayName: Moon Stone Sword Projectile
+	BaseMoonStoneSwordProjectile.DisplayName: Base Moon Stone Sword Projectile
+	MoonStoneSwordProjectile_0.DisplayName: Moon Stone Sword Projectile_0
+	MoonStoneSwordProjectile_1.DisplayName: Moon Stone Sword Projectile_1
+	MoonStoneSwordProjectile_2.DisplayName: Moon Stone Sword Projectile_2
+	MoonStoneSwordProjectile_3.DisplayName: Moon Stone Sword Projectile_3
+	MoonStoneSwordProjectile_4.DisplayName: Moon Stone Sword Projectile_4
+	MoonStoneProjectile.DisplayName: Moon Stone Projectile
+	MoonStoneProjectile2.DisplayName: Moon Stone Projectile2
+	MoonStoneProjectile3.DisplayName: Moon Stone Projectile3
 }
 
 Buffs: {
